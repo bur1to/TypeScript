@@ -1,7 +1,10 @@
 import express from 'express';
 import mongoose, { ConnectOptions } from 'mongoose';
-import { router } from './routers/userRouter';
-const userRouter = router;
+import { userRouter } from './routers/userRouter';
+import { commentRouter } from './routers/comment'
+
+const userRoute = userRouter;
+const commentRoute = commentRouter;
 
 const app: express.Application = express();
 
@@ -13,8 +16,9 @@ mongoose.connect('mongodb://localhost:27017/newDb', { useNewUrlParser: true, use
 .then(() => console.log('database is successfully connected...'))
 .catch((err) => console.log(err));
 
-app.use('/user', userRouter);
+app.use('/users', userRoute);
+app.use('/comments', commentRoute);
 
 app.listen(3000, () => {
     console.log('server is running');
-})
+});
