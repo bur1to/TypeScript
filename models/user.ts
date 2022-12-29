@@ -1,4 +1,4 @@
-import { Schema, SchemaOptions, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 interface user {
   firstName: string,
@@ -17,7 +17,7 @@ const userSchema = new Schema<user>({
 }, {
     collection: 'users',
     versionKey: false
-} as SchemaOptions);
+});
 
 const User = model<user>('User', userSchema);
 
