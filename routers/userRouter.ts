@@ -1,6 +1,6 @@
 import express from 'express';
 
-export const router = express.Router();
+export const userRouter = express.Router();
 
 import {
     getUsers,
@@ -10,11 +10,11 @@ import {
     deleteUser
 } from '../controllers/users';
 
-router.get('/', getUsers);
-router.get('/:id', getUser);
+userRouter.get('/', getUsers);
+userRouter.get('/:id', getUser);
 
-router.post('/', createUser);
+userRouter.post('/', createUser);
 
-router.put('/:id', updateUser);
+userRouter.put('/:id', updateUser);
 
-router.delete('/:id', deleteUser);
+userRouter.delete('/:id', deleteUser);
