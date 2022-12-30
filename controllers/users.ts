@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import bcrypt from 'bcrypt';
 import User from '../models/user';
 import { createUserValidation, updateUserValidation }  from '../validations/userValidation';
 
@@ -36,6 +37,9 @@ const createUser = (async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const value = await createUserValidation(body);
+    const salt = await bcrypt.genSalt(10);
+
+    value.password = await bcrypt.hash(value.password, salt);
 
     const user = await User.create(value);
     
@@ -51,6 +55,9 @@ const updateUser = (async (req: Request, res: Response, next: NextFunction) => {
     const { body } = req;
 
     const value = await updateUserValidation(body);
+
+    const salt = await bcrypt.genSalt(10);
+    value.password = await bcrypt.hash(value.password, salt)
 
     const updated = await User.findByIdAndUpdate(id, value, { new: true });
 
