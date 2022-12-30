@@ -1,5 +1,8 @@
-import user = require('./userRouter');
-import comment = require('./comment');
+import { userRouter } from './userRouter';
+import { commentRouter } from './comment';
+
+const comment = commentRouter
+const user = userRouter;
 
 export {
     user,

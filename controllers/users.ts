@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import User from '../models/user';
 import { createUserValidation, updateUserValidation }  from '../validations/userValidation';
 
-export const getUsers = (async (req: Request, res: Response, next: NextFunction) => {
+const getUsers = (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = await User.find();
 
@@ -12,7 +12,7 @@ export const getUsers = (async (req: Request, res: Response, next: NextFunction)
   }
 });
 
-export const getUser = (async (req: Request, res: Response, next: NextFunction) => {
+const getUser = (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const data = await User.findOne({ _id: id });
@@ -27,7 +27,7 @@ export const getUser = (async (req: Request, res: Response, next: NextFunction) 
   }
 });
 
-export const createUser = (async (req: Request, res: Response, next: NextFunction) => {
+const createUser = (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { body } = req;
 
@@ -45,7 +45,7 @@ export const createUser = (async (req: Request, res: Response, next: NextFunctio
    }
 });
 
-export const updateUser = (async (req: Request, res: Response, next: NextFunction) => {
+const updateUser = (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const { body } = req;
@@ -60,7 +60,7 @@ export const updateUser = (async (req: Request, res: Response, next: NextFunctio
   }
 });
 
-export const deleteUser = (async (req: Request, res: Response, next: NextFunction) => {
+const deleteUser = (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
 
@@ -71,3 +71,11 @@ export const deleteUser = (async (req: Request, res: Response, next: NextFunctio
     next(err);
   }
 });
+
+export {
+  getUsers,
+  getUser,
+  createUser,
+  updateUser,
+  deleteUser
+};

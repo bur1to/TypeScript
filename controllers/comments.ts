@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import Comment from "../models/comment";
 import { createCommentValidation, updateCommentValidation } from "../validations/commentValidation";
 
-export const getComments = (async (req: Request, res: Response, next: NextFunction) => {
+const getComments = (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = await Comment.find();
 
@@ -12,7 +12,7 @@ export const getComments = (async (req: Request, res: Response, next: NextFuncti
   }
 });
 
-export const getComment = (async (req: Request, res: Response, next: NextFunction) => {
+const getComment = (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
 
@@ -24,7 +24,7 @@ export const getComment = (async (req: Request, res: Response, next: NextFunctio
   }
 });
 
-export const createComment = (async (req: Request, res: Response, next: NextFunction) => {
+const createComment = (async (req: Request, res: Response, next: NextFunction) => {
   try { 
     const { body } = req;
 
@@ -41,7 +41,7 @@ export const createComment = (async (req: Request, res: Response, next: NextFunc
   }
 });
 
-export const updateComment = (async (req: Request, res: Response, next: NextFunction) => {
+const updateComment = (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const { body } = req;
@@ -55,7 +55,7 @@ export const updateComment = (async (req: Request, res: Response, next: NextFunc
   }
 });
 
-export const deleteComment = (async (req: Request, res: Response, next: NextFunction) => {
+const deleteComment = (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
 
@@ -66,3 +66,11 @@ export const deleteComment = (async (req: Request, res: Response, next: NextFunc
     next(err);
   }
 });
+
+export {
+  getComments,
+  getComment,
+  createComment,
+  updateComment,
+  deleteComment
+};
