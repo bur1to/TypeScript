@@ -2,9 +2,11 @@ import express from 'express';
 import mongoose, { ConnectOptions } from 'mongoose';
 import { userRouter } from './routers/userRouter';
 import { commentRouter } from './routers/comment'
+import { authRouter } from './routers/authorizationRouter';
 
 const userRoute = userRouter;
 const commentRoute = commentRouter;
+const authRoute = authRouter;
 
 const app: express.Application = express();
 
@@ -18,6 +20,7 @@ mongoose.connect('mongodb://localhost:27017/newDb', { useNewUrlParser: true, use
 
 app.use('/users', userRoute);
 app.use('/comments', commentRoute);
+app.use('/auth', authRoute);
 
 app.listen(3000, () => {
     console.log('server is running');
