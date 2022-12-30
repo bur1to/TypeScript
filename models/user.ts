@@ -13,7 +13,7 @@ const userSchema = new Schema<user>({
     lastName: { type: String },
     age: { type: Number, minLength: 1, maxLength: 120 },
     email: { type: String, unique: true },
-    password: { type: String, minLength: 5, maxLength: 30 }
+    password: { type: String, minLength: 5 }
 }, {
     collection: 'users',
     versionKey: false
