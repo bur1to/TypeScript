@@ -6,7 +6,7 @@ export const createUserValidation = (data: any) => {
         lastName: Joi.string().min(2).max(255).required(),
         age: Joi.number().min(1).max(120).required(),
         email: Joi.string().email().required(),
-        password: Joi.string().pattern(/^[a-zA-Z0-9!@#$%^&*]{5,30}$/).required()
+        password: Joi.string().pattern(/^[a-zA-Z0-9!@#$%^&*]/).min(5).required()
     });
     return createSchema.validateAsync(data);
 };
@@ -17,7 +17,7 @@ export const updateUserValidation = (data: any) => {
         lastName: Joi.string().min(2).max(255),
         age: Joi.number().min(1).max(120),
         email: Joi.string().email(),
-        password: Joi.string().pattern(/^[a-zA-Z0-9!@#$%^&*]{5,30}$/)
+        password: Joi.string().pattern(/^[a-zA-Z0-9!@#$%^&*]/).min(5)
     });
     return updateSchema.validateAsync(data);
 };
