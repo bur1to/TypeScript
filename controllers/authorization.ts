@@ -1,6 +1,7 @@
 import User from '../models/user';
 import { Request, Response, NextFunction } from 'express';
-import bcrypt from 'bcrypt';
+import crypto from 'crypto';
+const salt: string = 'ff2a533044ed72f4b6a6c29a9a174c87';
 
 const authorization = (async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -12,9 +13,9 @@ const authorization = (async (req: Request, res: Response, next: NextFunction) =
         throw new Error('Invalid email');
     }
 
-    const validPass = bcrypt.compare(body.password, user.password);
+    body.password = crypto.pbkdf2Sync(body.password, salt, 1000, 64, 'sha512').toString('hex');
 
-    if (!validPass) {
+    if (user.password !== body.password) {
         throw new Error('Invalid password. Try again');
     }
 

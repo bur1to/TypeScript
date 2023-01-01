@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import User from '../models/user';
 import { createUserValidation, updateUserValidation }  from '../validations/userValidation';
+const salt: string = 'ff2a533044ed72f4b6a6c29a9a174c87';
 
 const getUsers = (async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -37,9 +38,8 @@ const createUser = (async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const value = await createUserValidation(body);
-    const salt = await bcrypt.genSalt(10);
 
-    value.password = await bcrypt.hash(value.password, salt);
+    value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha512').toString('hex');
 
     const user = await User.create(value);
     
@@ -56,8 +56,7 @@ const updateUser = (async (req: Request, res: Response, next: NextFunction) => {
 
     const value = await updateUserValidation(body);
 
-    const salt = await bcrypt.genSalt(10);
-    value.password = await bcrypt.hash(value.password, salt)
+    value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha513').toString('hex');
 
     const updated = await User.findByIdAndUpdate(id, value, { new: true });
 
