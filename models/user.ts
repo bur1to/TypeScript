@@ -5,7 +5,8 @@ interface user {
   lastName: string,
   age: number,
   email: string,
-  password: string 
+  password: string,
+  salt: string
 };
 
 const userSchema = new Schema<user>({
@@ -13,7 +14,8 @@ const userSchema = new Schema<user>({
     lastName: { type: String },
     age: { type: Number, minLength: 1, maxLength: 120 },
     email: { type: String, unique: true },
-    password: { type: String, minLength: 5 }
+    password: { type: String, minLength: 5 },
+    salt: { type: String }
 }, {
     collection: 'users',
     versionKey: false
@@ -21,4 +23,4 @@ const userSchema = new Schema<user>({
 
 const User = model<user>('User', userSchema);
 
-export default User;
+export { User }
