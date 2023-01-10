@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import Comment from "../models/comment";
+import { User } from '../models/user';
 import { createCommentValidation, updateCommentValidation } from "../validations/commentValidation";
 
 const getComments = (async (req: Request, res: Response, next: NextFunction) => {
@@ -27,15 +28,18 @@ const getComment = (async (req: Request, res: Response, next: NextFunction) => {
 const createComment = (async (req: Request, res: Response, next: NextFunction) => {
   try { 
     const { body } = req;
+    const { userId } = req.body;
 
-    if (!body) {
-      throw new Error('Body required');
+    const user = await User.findOne({ _id: userId})
+
+    if (!user) {
+      throw new Error('User does not exist');
     }
 
     const value = await createCommentValidation(body);
-    const user = await Comment.create(value);
+    const created = await Comment.create(value);
 
-    res.send(user);
+    res.send(created);
   } catch (err) {
     next(err);
   }

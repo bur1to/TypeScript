@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
-import User from '../models/user';
+import { User } from '../models/user';
 import { createUserValidation, updateUserValidation }  from '../validations/userValidation';
-const salt: string = 'ff2a533044ed72f4b6a6c29a9a174c87';
 
 const getUsers = (async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -20,7 +19,7 @@ const getUser = (async (req: Request, res: Response, next: NextFunction) => {
     const data = await User.findOne({ _id: id });
 
     if (!data) {
-        throw new Error('User does not exist');
+        throw new Error('User not found');
     }
 
     res.send(data);
@@ -38,8 +37,10 @@ const createUser = (async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const value = await createUserValidation(body);
+    const salt: string = crypto.randomBytes(16).toString('hex');
 
     value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha512').toString('hex');
+    value.salt = salt;
 
     const user = await User.create(value);
     
@@ -55,6 +56,7 @@ const updateUser = (async (req: Request, res: Response, next: NextFunction) => {
     const { body } = req;
 
     const value = await updateUserValidation(body);
+    const salt: string = crypto.randomBytes(16).toString('hex');
 
     value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha513').toString('hex');
 
