@@ -1,7 +1,6 @@
-import User from '../models/user';
+import { User } from '../models/user';
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
-const salt: string = 'ff2a533044ed72f4b6a6c29a9a174c87';
 
 const authorization = (async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -10,13 +9,14 @@ const authorization = (async (req: Request, res: Response, next: NextFunction) =
     const user = await User.findOne({ email: body.email });
 
     if (!user) {
-        throw new Error('Invalid email');
+        throw new Error('Incorrect email or password');
     }
 
+    const salt: string = user.salt;
     body.password = crypto.pbkdf2Sync(body.password, salt, 1000, 64, 'sha512').toString('hex');
 
     if (user.password !== body.password) {
-        throw new Error('Invalid password. Try again');
+        throw new Error('Incorrect email or password');
     }
 
     const userData = {
@@ -31,5 +31,5 @@ const authorization = (async (req: Request, res: Response, next: NextFunction) =
 });
 
 export {
-    authorization
+  authorization
 }
