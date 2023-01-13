@@ -3,7 +3,10 @@ import mongoose, { ConnectOptions } from 'mongoose';
 import { userRouter } from './routers/userRouter';
 import { commentRouter } from './routers/comment'
 import { authRouter } from './routers/authorizationRouter';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 
+const swaggerDoc = YAML.load('./swagger/docs.yaml')
 const userRoute = userRouter;
 const commentRoute = commentRouter;
 const authRoute = authRouter;
@@ -21,6 +24,7 @@ mongoose.connect('mongodb://localhost:27017/newDb', { useNewUrlParser: true, use
 app.use('/users', userRoute);
 app.use('/comments', commentRoute);
 app.use('/auth', authRoute);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.listen(3000, () => {
     console.log('server is running');
