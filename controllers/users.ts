@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
 import { User } from '../models/user';
 import { createUserValidation, updateUserValidation }  from '../validations/userValidation';
+import isEmpty from 'lodash.isempty';
 
 const getUsers = (async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -56,10 +57,13 @@ const updateUser = (async (req: Request, res: Response, next: NextFunction) => {
     const { body } = req;
 
     const value = await updateUserValidation(body);
-    const salt: string = crypto.randomBytes(16).toString('hex');
+    
+    if (!isEmpty(body.password)) {
+      const salt: string = crypto.randomBytes(16).toString('hex');
 
-    value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha512').toString('hex');
-    value.salt = salt;
+      value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha512').toString('hex');
+      value.salt = salt;
+    }
 
     const updated = await User.findByIdAndUpdate(id, value, { new: true });
 

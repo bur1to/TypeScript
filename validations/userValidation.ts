@@ -6,8 +6,7 @@ export const createUserValidation = (data: any) => {
         lastName: Joi.string().min(2).max(255).required(),
         age: Joi.number().min(1).max(120).required(),
         email: Joi.string().email().required(),
-        password: Joi.string().pattern(/^[a-zA-Z0-9!@#$%^&*]/).min(5).required(),
-        salt: Joi.string()
+        password: Joi.string().pattern(/^[a-zA-Z0-9!@#$%^&*]/).min(5).required()
     });
     return createSchema.validateAsync(data);
 };
