@@ -2,11 +2,15 @@ import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
 import { User } from '../models/user';
 import { createUserValidation, updateUserValidation }  from '../validations/userValidation';
-import isEmpty from 'lodash.isempty';
 
 const getUsers = (async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await User.find();
+    const data = await User.find({}, {
+      firstName: 1,
+      lastName: 1,
+      email: 1,
+      age: 1
+    });
 
     res.send(data);
   } catch (err) {
@@ -17,7 +21,12 @@ const getUsers = (async (req: Request, res: Response, next: NextFunction) => {
 const getUser = (async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const data = await User.findOne({ _id: id });
+    const data = await User.findOne({ _id: id }, {
+      firstName: 1,
+      lastName: 1,
+      email: 1,
+      age: 1
+    });
 
     if (!data) {
         throw new Error('User not found');
@@ -37,13 +46,13 @@ const createUser = (async (req: Request, res: Response, next: NextFunction) => {
         throw new Error('Body required');
     }
 
-    const value = await createUserValidation(body);
+    const createParams = await createUserValidation(body);
     const salt: string = crypto.randomBytes(16).toString('hex');
 
-    value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha512').toString('hex');
-    value.salt = salt;
+    createParams.password = crypto.pbkdf2Sync(createParams.password, salt, 1000, 64, 'sha512').toString('hex');
+    createParams.salt = salt;
 
-    const user = await User.create(value);
+    const user = await User.create(createParams);
     
     res.send(user);
    } catch (err) {
@@ -56,16 +65,16 @@ const updateUser = (async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { body } = req;
 
-    const value = await updateUserValidation(body);
+    const updateParams = await updateUserValidation(body);
     
-    if (!isEmpty(body.password)) {
+    if (body.password) {
       const salt: string = crypto.randomBytes(16).toString('hex');
 
-      value.password = crypto.pbkdf2Sync(value.password, salt, 1000, 64, 'sha512').toString('hex');
-      value.salt = salt;
+      updateParams.password = crypto.pbkdf2Sync(updateParams.password, salt, 1000, 64, 'sha512').toString('hex');
+      updateParams.salt = salt;
     }
 
-    const updated = await User.findByIdAndUpdate(id, value, { new: true });
+    const updated = await User.findByIdAndUpdate(id, updateParams, { new: true });
 
     res.send(updated);
   } catch (err) {
